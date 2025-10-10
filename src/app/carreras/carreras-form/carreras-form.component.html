@@ -1,0 +1,31 @@
+<app-navbar></app-navbar>
+<div class="form-container">
+  <h2>{{ id ? 'Editar Carrera' : 'Nueva Carrera' }}</h2>
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="student-form">
+
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input formControlName="nombre" required>
+    </div>
+
+    <div class="form-group">
+      <label>Descripción:</label>
+      <input formControlName="descripcion" required>
+    </div>
+
+    <div class="form-group">
+      <label>Sigla:</label>
+      <input formControlName="sigla" required>
+    </div>
+
+    <div class="form-group">
+      <label>Facultad ID:</label>
+      <input formControlName="facultadId" required type="number">
+    </div>
+
+    <div class="form-buttons">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</div>

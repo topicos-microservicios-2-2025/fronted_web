@@ -1,0 +1,40 @@
+<app-navbar></app-navbar>
+<div class="form-container">
+  <h2>Registrar Estudiante</h2>
+  <form (ngSubmit)="guardar()" #form="ngForm" class="student-form">
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" [(ngModel)]="estudiante.nombre" required />
+    </div>
+
+    <div class="form-group">
+      <label for="apellidoPaterno">Apellido Paterno:</label>
+      <input type="text" id="apellidoPaterno" name="apellidoPaterno" [(ngModel)]="estudiante.apellidoPaterno" required />
+    </div>
+
+    <div class="form-group">
+      <label for="apellidoMaterno">Apellido Materno:</label>
+      <input type="text" id="apellidoMaterno" name="apellidoMaterno" [(ngModel)]="estudiante.apellidoMaterno" />
+    </div>
+
+    <div class="form-group">
+      <label for="ci">CI:</label>
+      <input type="text" id="ci" name="ci" [(ngModel)]="estudiante.ci" required />
+    </div>
+
+    <div class="form-group">
+      <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+      <input type="date" id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="estudiante.fechaNacimiento" required />
+    </div>
+
+    <div class="form-group">
+      <label for="nacionalidad">Nacionalidad:</label>
+      <input type="text" id="nacionalidad" name="nacionalidad" [(ngModel)]="estudiante.nacionalidad" />
+    </div>
+
+    <div class="form-buttons">
+      <button type="submit" [disabled]="!form.form.valid" class="btn btn-primary">Guardar</button>
+      <button type="button" (click)="cancelar()" class="btn btn-secondary">Cancelar</button>
+    </div>
+  </form>
+</div>

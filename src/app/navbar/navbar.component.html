@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <div class="nav-brand">UAGRM</div>
+
+  <!-- Menú hamburguesa -->
+  <div class="menu-toggle" (click)="toggleMenu()">
+    &#9776;
+  </div>
+
+  <!-- Menú de navegación -->
+  <div class="nav-menu" [class.active]="menuActive">
+    <a routerLink="/inscripcion">Inscripción</a>
+    <a routerLink="/facultades" routerLinkActive="active" (click)="closeMenu()">Facultades</a>
+    <a routerLink="/carreras" routerLinkActive="active" (click)="closeMenu()">Carreras</a>
+    <a routerLink="/estudiantes" routerLinkActive="active" (click)="closeMenu()">Estudiantes</a>
+    <a routerLink="/materias" routerLinkActive="active" (click)="closeMenu()">Materias</a>
+    <a routerLink="/docentes" routerLinkActive="active" (click)="closeMenu()">Docentes</a>
+    <button class="logout" (click)="logout()">Salir</button>
+  </div>
+</nav>

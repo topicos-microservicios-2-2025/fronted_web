@@ -1,0 +1,8 @@
+
+ng build --configuration production de nuevo.
+
+docker build -t fronted-topicos-app .
+
+docker run -p 4200:80 fronted-topicos-app
+
+docker save fronted-topicos-app | gzip > fronted-topicos-app.tar.gz

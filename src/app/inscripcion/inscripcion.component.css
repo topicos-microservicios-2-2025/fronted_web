@@ -1,0 +1,138 @@
+/* Contenedor principal */
+.inscripcion-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f9f9fb;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Títulos */
+.titulo-inscripcion {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #222;
+  text-align: center;
+}
+
+.subtitulo-materias {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+/* Campo ID estudiante */
+.estudiante-card {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.estudiante-card label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.estudiante-card input {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Grilla de materias */
+.materias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Tarjeta materia */
+.materia-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.materia-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.materia-card label {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.materia-card input[type="checkbox"] {
+  margin-top: 5px;
+  width: 20px;
+  height: 20px;
+  accent-color: #007b5e;
+}
+
+/* Info dentro de la tarjeta */
+.materia-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.materia-nombre {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.materia-sigla {
+  font-weight: 600;
+  color: #555;
+}
+
+.materia-docente,
+.materia-cupo,
+.materia-id {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.materia-id {
+  font-weight: 600;
+  color: #c0392b; /* Rojo */
+}
+
+/* Botón de inscripción */
+.inscribir-btn {
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  background-color: #007b5e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inscribir-btn:hover {
+  background-color: #005f46;
+}
+
+/* Ayuda */
+.ayuda {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #999;
+  text-align: center;
+}

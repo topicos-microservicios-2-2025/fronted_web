@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+<div class="estudiantes-container">
+  <div class="header">
+    <h2>Lista de Estudiantes</h2>
+    <button class="btn btn-primary" (click)="irANuevo()">➕ Nuevo</button>
+  </div>
+
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido Paterno</th>
+        <th>Apellido Materno</th>
+        <th>CI</th>
+        <th>Fecha Nacimiento</th>
+        <th>Nacionalidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let estudiante of estudiantes">
+        <td>{{ estudiante.nombre }}</td>
+        <td>{{ estudiante.apellidoPaterno }}</td>
+        <td>{{ estudiante.apellidoMaterno }}</td>
+        <td>{{ estudiante.ci }}</td>
+        <td>{{ estudiante.fechaNacimiento | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ estudiante.nacionalidad }}</td>
+        <td>
+          <button class="btn btn-edit" *ngIf="estudiante.id !== undefined" (click)="editarEstudiante(estudiante.id)">✏️</button>
+          <button class="btn btn-delete" *ngIf="estudiante.id !== undefined" (click)="eliminarEstudiante(estudiante.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

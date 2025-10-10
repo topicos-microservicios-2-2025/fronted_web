@@ -1,0 +1,42 @@
+<app-navbar></app-navbar>
+
+<div class="inscripcion-container">
+  <h2 class="titulo-inscripcion">Inscripción de Materias</h2>
+
+  <div class="estudiante-card">
+    <label for="estudianteId">ID Estudiante:</label>
+    <input
+      id="estudianteId"
+      type="number"
+      [(ngModel)]="estudianteId"
+      min="1"
+      placeholder="Ingrese su ID"
+    />
+  </div>
+
+  <div class="materias-list">
+    <h3 class="subtitulo-materias">Seleccione los grupos de materias:</h3>
+
+    <div class="materias-grid">
+      <div *ngFor="let materia of materias" class="materia-card">
+        <label>
+          <input
+            type="checkbox"
+            (change)="toggleMateria(materia.id)"
+            [checked]="grupoMateriasIds.includes(materia.id)"
+          />
+          <div class="materia-info">
+            <div class="materia-nombre">{{ materia.nombre }}</div>
+            <div class="materia-sigla">[{{ materia.sigla }}]</div>
+            <div class="materia-docente">Docente: {{ materia.docente }}</div>
+            <div class="materia-cupo">Cupo: {{ materia.cupo }}</div>
+            <div class="materia-id">ID Grupo: {{ materia.id }}</div>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <button class="inscribir-btn" (click)="inscribir()">Inscribirme</button>
+  <div class="ayuda">* Debe ingresar su ID y seleccionar al menos un grupo de materia.</div>
+</div>

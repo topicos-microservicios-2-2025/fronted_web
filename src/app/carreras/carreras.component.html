@@ -1,0 +1,41 @@
+<app-navbar></app-navbar>
+<div class="carreras-container">
+  <div class="header">
+    <h2>Lista de Carreras</h2>
+    <button class="btn btn-primary" (click)="irANuevo()">+ Nueva</button>
+  </div>
+
+  <div *ngIf="cargando" class="mensaje-info">Cargando...</div>
+  <div *ngIf="error" class="mensaje-error">{{ error }}</div>
+
+  <table *ngIf="!cargando && carreras.length" class="styled-table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Sigla</th>
+        <th>Descripción</th>
+        <th>Facultad</th>
+        <th>Creado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let carrera of carreras">
+        <td>{{ carrera.nombre }}</td>
+        <td>{{ carrera.sigla }}</td>
+        <td>{{ carrera.descripcion }}</td>
+        <td>{{ carrera.facultadId }}</td>
+        <td>{{ carrera.createdAt | date:'short' }}</td>
+        <td>
+          <button class="btn btn-edit" (click)="irAEditar(carrera.id)">✏️</button>
+          <button class="btn btn-delete" (click)="eliminarCarrera(carrera.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!cargando && !carreras.length && !error" class="mensaje-info">
+    No hay carreras registradas.
+  </div>
+</div>
+
