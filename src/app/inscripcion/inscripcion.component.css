@@ -1,138 +1,183 @@
-/* Contenedor principal */
-.inscripcion-container {
-  max-width: 1200px;
+/* Container y Layout */
+.container {
+  max-width: 700px;
   margin: 2rem auto;
-  padding: 2rem;
-  background-color: #f9f9fb;
+  padding: 1.5rem 2rem;
+  background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* Títulos */
-.titulo-inscripcion {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #222;
-  text-align: center;
-}
-
-.subtitulo-materias {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  color: #444;
-}
-
-/* Campo ID estudiante */
-.estudiante-card {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2rem;
-}
-
-.estudiante-card label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
 
-.estudiante-card input {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 300px;
-}
-
-/* Grilla de materias */
-.materias-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
-
-/* Tarjeta materia */
-.materia-card {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
-  border: 1px solid #e0e0e0;
-}
-
-.materia-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-
-.materia-card label {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  cursor: pointer;
-}
-
-.materia-card input[type="checkbox"] {
-  margin-top: 5px;
-  width: 20px;
-  height: 20px;
-  accent-color: #007b5e;
-}
-
-/* Info dentro de la tarjeta */
-.materia-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.materia-nombre {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #222;
-}
-
-.materia-sigla {
-  font-weight: 600;
-  color: #555;
-}
-
-.materia-docente,
-.materia-cupo,
-.materia-id {
-  font-size: 0.95rem;
-  color: #666;
-}
-
-.materia-id {
-  font-weight: 600;
-  color: #c0392b; /* Rojo */
-}
-
-/* Botón de inscripción */
-.inscribir-btn {
-  margin-top: 2rem;
-  padding: 0.75rem 2rem;
-  background-color: #007b5e;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.inscribir-btn:hover {
-  background-color: #005f46;
-}
-
-/* Ayuda */
-.ayuda {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #999;
+.title {
   text-align: center;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+/* Inputs y botones */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.25s ease;
+}
+
+.input-field:focus {
+  border-color: #2980b9;
+  outline: none;
+}
+
+.btn {
+  cursor: pointer;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: #2980b9;
+  color: #fff;
+}
+
+.btn-primary:disabled {
+  background-color: #7f9cb5;
+  cursor: not-allowed;
+}
+
+.btn-success {
+  background-color: #27ae60;
+  color: #fff;
+  margin-top: 1.5rem;
+}
+
+.btn-success:disabled {
+  background-color: #8fcbb8;
+  cursor: not-allowed;
+}
+
+/* Mensajes */
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.alert-error {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.alert-success {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+/* Spinner */
+.spinner {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para materias y grupos */
+.materia-card {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
+  border: 1px solid #e1e1e1;
+}
+
+.materia-card h4 {
+  margin-bottom: 0.3rem;
+  color: #34495e;
+}
+
+.grupos-list {
+  margin-top: 0.8rem;
+  padding-left: 1rem;
+}
+
+.grupo-option {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+  color: #2c3e50;
+}
+
+.grupo-option input[type="radio"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.grupo-text {
+  font-weight: 600;
+}
+
+.horarios {
+  font-size: 0.9rem;
+  margin-left: 24px;
+  color: #555;
+  margin-top: 0.2rem;
+}
+
+.horario-item:not(:last-child)::after {
+  content: ",";
+  margin-right: 4px;
+}
+
+.no-horarios {
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-left: 24px;
+  color: #999;
+}
+
+.empty-message {
+  font-style: italic;
+  color: #999;
+  margin-top: 0.6rem;
+}
+
+/* Información del estudiante */
+.student-info h3 {
+  color: #2980b9;
+  border-bottom: 2px solid #2980b9;
+  padding-bottom: 4px;
+  margin-bottom: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem 1rem;
+  }
 }

@@ -1,42 +1,88 @@
 <app-navbar></app-navbar>
+<div class="container">
+  <h2 class="title">Inscripción de Materias</h2>
 
-<div class="inscripcion-container">
-  <h2 class="titulo-inscripcion">Inscripción de Materias</h2>
-
-  <div class="estudiante-card">
-    <label for="estudianteId">ID Estudiante:</label>
+  <div class="form-group">
+    <label for="registro">Número de registro:</label>
     <input
-      id="estudianteId"
       type="number"
-      [(ngModel)]="estudianteId"
-      min="1"
-      placeholder="Ingrese su ID"
+      id="registro"
+      [(ngModel)]="registro"
+      placeholder="Ingrese número de registro"
+      [disabled]="isLoading || isSubmitting"
+      class="input-field"
     />
   </div>
 
-  <div class="materias-list">
-    <h3 class="subtitulo-materias">Seleccione los grupos de materias:</h3>
+  <button
+    (click)="buscarEstudiante()"
+    [disabled]="!registro || isLoading || isSubmitting"
+    class="btn btn-primary"
+  >
+    <ng-container *ngIf="isLoading; else buscarTexto">
+      <span class="spinner"></span> Buscando...
+    </ng-container>
+    <ng-template #buscarTexto>Buscar Estudiante</ng-template>
+  </button>
 
-    <div class="materias-grid">
-      <div *ngFor="let materia of materias" class="materia-card">
-        <label>
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+  <div *ngIf="estudiante" class="student-info">
+    <h3>Datos del Estudiante</h3>
+    <p><strong>Nombre:</strong> {{ estudiante.nombre }} {{ estudiante.apellidoPaterno }} {{ estudiante.apellidoMaterno }}</p>
+    <p><strong>CI:</strong> {{ estudiante.ci }}</p>
+    <p><strong>Fecha de nacimiento:</strong> {{ estudiante.fechaNacimiento | date:'dd/MM/yyyy' }}</p>
+
+    <h3>Oferta de Materias</h3>
+
+    <div *ngIf="oferta.length === 0" class="empty-message">
+      No hay materias disponibles para inscripción.
+    </div>
+
+    <div *ngFor="let materia of oferta" class="materia-card">
+      <h4>{{ materia.nombre }} ({{ materia.sigla }})</h4>
+      <p><strong>Nivel:</strong> {{ materia.nivel }}, <strong>Horas:</strong> {{ materia.horasDeEstudio }}</p>
+
+      <div *ngIf="materia.Grupo_Materia?.length > 0" class="grupos-list">
+        <label *ngFor="let grupo of materia.Grupo_Materia" class="grupo-option">
           <input
-            type="checkbox"
-            (change)="toggleMateria(materia.id)"
-            [checked]="grupoMateriasIds.includes(materia.id)"
+            type="radio"
+            [name]="'grupo_' + materia.id"
+            [value]="grupo.id"
+            (change)="seleccionarGrupo(materia.id, grupo.id)"
+            [checked]="selectedMaterias[materia.id] === grupo.id"
+            [disabled]="isSubmitting"
           />
-          <div class="materia-info">
-            <div class="materia-nombre">{{ materia.nombre }}</div>
-            <div class="materia-sigla">[{{ materia.sigla }}]</div>
-            <div class="materia-docente">Docente: {{ materia.docente }}</div>
-            <div class="materia-cupo">Cupo: {{ materia.cupo }}</div>
-            <div class="materia-id">ID Grupo: {{ materia.id }}</div>
+          <span class="grupo-text">
+            Grupo: <strong>{{ grupo.sigla }}</strong>, Docente: {{ grupo.Docente?.nombre }} {{ grupo.Docente?.apellidoPaterno }}
+          </span>
+          <div *ngIf="grupo.AulaHorarios?.length > 0" class="horarios">
+            Horarios:
+            <span *ngFor="let horario of grupo.AulaHorarios; let last = last" class="horario-item">
+              {{ horario.Horario.dia }} {{ horario.Horario.inicio }}-{{ horario.Horario.final }} en Aula {{ horario.Aula.numero }}{{ last ? '' : ',' }}
+            </span>
           </div>
+          <div *ngIf="!grupo.AulaHorarios || grupo.AulaHorarios.length === 0" class="no-horarios">Sin horarios disponibles</div>
         </label>
       </div>
-    </div>
-  </div>
 
-  <button class="inscribir-btn" (click)="inscribir()">Inscribirme</button>
-  <div class="ayuda">* Debe ingresar su ID y seleccionar al menos un grupo de materia.</div>
+      <div *ngIf="!materia.Grupo_Materia || materia.Grupo_Materia.length === 0" class="empty-message">
+        No hay grupos disponibles para esta materia.
+      </div>
+    </div>
+
+    <button
+      class="btn btn-success"
+      (click)="inscribirMaterias()"
+      [disabled]="materiasSeleccionadasCount === 0 || isSubmitting"
+    >
+      <ng-container *ngIf="isSubmitting; else inscribirTexto">
+        <span class="spinner"></span> Inscribiendo...
+      </ng-container>
+      <ng-template #inscribirTexto>
+        Inscribir Materias ({{ materiasSeleccionadasCount }})
+      </ng-template>
+    </button>
+  </div>
 </div>
