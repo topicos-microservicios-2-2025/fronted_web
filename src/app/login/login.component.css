@@ -1,0 +1,172 @@
+/* Fondo general blanco */
+body {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Contenedor centrado */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 1rem;
+}
+
+/* Tarjeta del formulario */
+.login-card {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Header con logo */
+.login-header {
+  margin-bottom: 2rem;
+}
+
+.logo-circle {
+  background-color: #00416A;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-circle svg {
+  color: white;
+}
+
+/* Títulos */
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #00416A;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Formulario */
+.login-form {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #00416A;
+}
+
+input.error {
+  border-color: #e74c3c;
+}
+
+.field-error {
+  font-size: 0.85rem;
+  color: #e74c3c;
+  margin-top: 0.25rem;
+}
+
+/* Botón login */
+.login-button {
+  width: 100%;
+  background-color: #00416A;
+  color: #fff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #022d4b;
+}
+
+.login-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error general */
+.error-message {
+  margin-top: 1rem;
+  color: #e74c3c;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Footer */
+.login-footer {
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: #999;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 2rem 1rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+}

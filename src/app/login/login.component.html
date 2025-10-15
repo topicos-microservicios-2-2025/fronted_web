@@ -1,0 +1,47 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-circle">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L1 9L12 15L21 12.09V17H23V9L12 3Z" fill="currentColor"/>
+          <path d="M5 13.18V17.18C5 19.09 8.03 20 12 20C15.97 20 19 19.09 19 17.18V13.18L12 15.18L5 13.18Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <h1 class="title">Inscripción UAGRM</h1>
+      <p class="subtitle">Universidad Autónoma Gabriel René Moreno</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="registro">Número de Registro</label>
+        <input type="number" id="registro" formControlName="registro" placeholder="Ej. 12345"
+               [class.error]="form.get('registro')?.invalid && form.get('registro')?.touched" />
+        <div class="field-error" *ngIf="form.get('registro')?.invalid && form.get('registro')?.touched">
+          <span *ngIf="form.get('registro')?.errors?.['required']">El registro es requerido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ci">Cédula de Identidad</label>
+        <input type="password" id="ci" formControlName="ci" placeholder="Ej. 12345678"
+               [class.error]="form.get('ci')?.invalid && form.get('ci')?.touched" />
+        <div class="field-error" *ngIf="form.get('ci')?.invalid && form.get('ci')?.touched">
+          <span *ngIf="form.get('ci')?.errors?.['required']">El CI es requerido</span>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loading || form.invalid" class="login-button">
+        <span *ngIf="!loading">Ingresar al Sistema</span>
+        <div *ngIf="loading" class="loading-spinner"></div>
+      </button>
+
+      <div class="error-message" *ngIf="errorMsg">
+        {{ errorMsg }}
+      </div>
+    </form>
+
+    <div class="login-footer">
+      © 2024 Universidad Autónoma Gabriel René Moreno
+    </div>
+  </div>
+</div>

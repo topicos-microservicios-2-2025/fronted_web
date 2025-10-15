@@ -1,19 +1,39 @@
-<nav class="navbar">
-  <div class="nav-brand">UAGRM</div>
+<nav class="navbar" *ngIf="isAuthenticated">
+  <div class="nav-content">
+    <!-- Logo -->
+    <div class="nav-brand">UAGRM</div>
 
-  <!-- Menú hamburguesa -->
-  <div class="menu-toggle" (click)="toggleMenu()">
-    &#9776;
+    <!-- Menú navegación (desktop) -->
+    <div class="nav-links">
+      <a routerLink="/inscripcion" routerLinkActive="active">Inscripción</a>
+      <a routerLink="/" routerLinkActive="active">Facultades</a>
+      <a routerLink="/" routerLinkActive="active">Carreras</a>
+      <a routerLink="/" routerLinkActive="active">Estudiantes</a>
+      <a routerLink="/" routerLinkActive="active">Materias</a>
+      <a routerLink="/" routerLinkActive="active">Docentes</a>
+    </div>
+
+    <!-- Ícono de usuario -->
+    <div class="user-icon-wrapper" (click)="toggleUserMenu()">
+      <div class="user-icon">👤</div>
+      <div class="user-dropdown" *ngIf="userMenuOpen">
+        <div class="user-name">{{ currentUser?.nombre }} {{ currentUser?.apellidoPaterno }}</div>
+        <div class="user-registro">Reg: {{ currentUser?.registro }}</div>
+        <button class="logout" (click)="logout()">Salir</button>
+      </div>
+    </div>
+
+    <!-- Menú hamburguesa (solo móvil) -->
+    <div class="menu-toggle" (click)="toggleMenu()">☰</div>
   </div>
 
-  <!-- Menú de navegación -->
+  <!-- Menú móvil -->
   <div class="nav-menu" [class.active]="menuActive">
-    <a routerLink="/inscripcion">Inscripción</a>
-    <a routerLink="/facultades" routerLinkActive="active" (click)="closeMenu()">Facultades</a>
-    <a routerLink="/carreras" routerLinkActive="active" (click)="closeMenu()">Carreras</a>
-    <a routerLink="/estudiantes" routerLinkActive="active" (click)="closeMenu()">Estudiantes</a>
-    <a routerLink="/materias" routerLinkActive="active" (click)="closeMenu()">Materias</a>
-    <a routerLink="/docentes" routerLinkActive="active" (click)="closeMenu()">Docentes</a>
-    <button class="logout" (click)="logout()">Salir</button>
+    <a routerLink="/inscripcion" routerLinkActive="active" (click)="closeMenu()">Inscripción</a>
+    <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Facultades</a>
+    <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Carreras</a>
+    <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Estudiantes</a>
+    <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Materias</a>
+    <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Docentes</a>
   </div>
 </nav>
