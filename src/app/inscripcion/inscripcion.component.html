@@ -40,30 +40,67 @@
       No hay materias disponibles para inscripción.
     </div>
 
-    <div *ngFor="let materia of oferta" class="materia-card">
-      <h4>{{ materia.nombre }} ({{ materia.sigla }})</h4>
-      <p><strong>Nivel:</strong> {{ materia.nivel }}, <strong>Horas:</strong> {{ materia.horasDeEstudio }}</p>
+    <div *ngFor="let materia of oferta" class="materia-card" [class.sin-cupos-disponibles]="!tieneGruposConCupo(materia)">
+      <div class="materia-header">
+        <h4>{{ materia.nombre }} ({{ materia.sigla }})
+          <span *ngIf="!tieneGruposConCupo(materia)" class="warning-badge">Sin cupos disponibles</span>
+        </h4>
+        <p><strong>Nivel:</strong> {{ materia.nivel }}, <strong>Horas:</strong> {{ materia.horasDeEstudio }}</p>
+      </div>
 
       <div *ngIf="materia.Grupo_Materia?.length > 0" class="grupos-list">
-        <label *ngFor="let grupo of materia.Grupo_Materia" class="grupo-option">
+        <div class="grupos-header">
+          <span class="grupos-title">Grupos disponibles:</span>
+          <span class="grupos-count">{{ getGruposConCupo(materia).length }} de {{ materia.Grupo_Materia.length }} con cupos</span>
+        </div>
+        
+        <label *ngFor="let grupo of materia.Grupo_Materia" 
+               class="grupo-option" 
+               [class.grupo-sin-cupo]="grupo.cupo === 0"
+               [class.grupo-seleccionado]="selectedMaterias[materia.id] === grupo.id">
           <input
             type="radio"
             [name]="'grupo_' + materia.id"
             [value]="grupo.id"
             (change)="seleccionarGrupo(materia.id, grupo.id)"
             [checked]="selectedMaterias[materia.id] === grupo.id"
-            [disabled]="isSubmitting"
+            [disabled]="isSubmitting || grupo.cupo === 0"
           />
-          <span class="grupo-text">
-            Grupo: <strong>{{ grupo.sigla }}</strong>, Docente: {{ grupo.Docente?.nombre }} {{ grupo.Docente?.apellidoPaterno }}
-          </span>
-          <div *ngIf="grupo.AulaHorarios?.length > 0" class="horarios">
-            Horarios:
-            <span *ngFor="let horario of grupo.AulaHorarios; let last = last" class="horario-item">
-              {{ horario.Horario.dia }} {{ horario.Horario.inicio }}-{{ horario.Horario.final }} en Aula {{ horario.Aula.numero }}{{ last ? '' : ',' }}
-            </span>
+          
+          <div class="grupo-info">
+            <div class="grupo-principal">
+              <span class="grupo-text">
+                Grupo: <strong>{{ grupo.sigla }}</strong>
+              </span>
+              <span class="cupo-badge" [class.sin-cupo]="grupo.cupo === 0" [class.con-cupo]="grupo.cupo > 0">
+                <span class="cupo-icon">👥</span>
+                {{ grupo.cupo }} cupos
+              </span>
+            </div>
+            
+            <div class="docente-info">
+              <span class="docente-icon">👨‍🏫</span>
+              Docente: {{ grupo.Docente?.nombre }} {{ grupo.Docente?.apellidoPaterno }}
+            </div>
+            
+            <div *ngIf="grupo.AulaHorarios?.length > 0" class="horarios">
+              <span class="horario-icon">🕐</span>
+              Horarios:
+              <span *ngFor="let horario of grupo.AulaHorarios; let last = last" class="horario-item">
+                {{ horario.Horario.dia }} {{ horario.Horario.inicio }}-{{ horario.Horario.final }} en Aula {{ horario.Aula.numero }}{{ last ? '' : ', ' }}
+              </span>
+            </div>
+            
+            <div *ngIf="!grupo.AulaHorarios || grupo.AulaHorarios.length === 0" class="no-horarios">
+              <span class="warning-icon"></span>
+              Sin horarios disponibles
+            </div>
+            
+            <div *ngIf="grupo.cupo === 0" class="cupo-agotado-mensaje">
+              <span class="error-icon"></span>
+              Cupos agotados para este grupo
+            </div>
           </div>
-          <div *ngIf="!grupo.AulaHorarios || grupo.AulaHorarios.length === 0" class="no-horarios">Sin horarios disponibles</div>
         </label>
       </div>
 
@@ -75,14 +112,64 @@
     <button
       class="btn btn-success"
       (click)="inscribirMaterias()"
-      [disabled]="materiasSeleccionadasCount === 0 || isSubmitting"
+      [disabled]="materiasSeleccionadasCount === 0 || showInscripcionModal"
     >
-      <ng-container *ngIf="isSubmitting; else inscribirTexto">
-        <span class="spinner"></span> Inscribiendo...
-      </ng-container>
-      <ng-template #inscribirTexto>
-        Inscribir Materias ({{ materiasSeleccionadasCount }})
-      </ng-template>
+      Inscribir Materias ({{ materiasSeleccionadasCount }})
     </button>
+  </div>
+</div>
+
+<!-- Modal de Estado de Inscripción -->
+<div *ngIf="showInscripcionModal" class="modal-overlay" (click)="$event.target === $event.currentTarget && inscripcionCompleta && cerrarModal()">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Estado de Inscripción</h3>
+      <button *ngIf="inscripcionCompleta" class="close-btn" (click)="cerrarModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Barra de progreso -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="inscripcionProgreso" [ngClass]="'progress-' + inscripcionEstado"></div>
+        </div>
+        <span class="progress-text">{{ inscripcionProgreso }}%</span>
+      </div>
+
+      <!-- Estado e ícono -->
+      <div class="estado-container">
+        <div class="estado-icon" [ngClass]="'estado-' + inscripcionEstado">
+          <ng-container [ngSwitch]="inscripcionEstado">
+            <span *ngSwitchCase="'iniciando'" class="spinner-modal"></span>
+            <span *ngSwitchCase="'enviando'" class="spinner-modal"></span>
+            <span *ngSwitchCase="'waiting'" class="clock-icon">⏳</span>
+            <span *ngSwitchCase="'procesando'" class="processing-icon">⚙️</span>
+            <span *ngSwitchCase="'exitoso'" class="success-icon">✅</span>
+            <span *ngSwitchCase="'sin-cupos'" class="warning-icon">⚠️</span>
+            <span *ngSwitchCase="'error'" class="error-icon">✅</span>
+          </ng-container>
+        </div>
+        
+        <div class="estado-mensaje">
+          <h4>{{ inscripcionMensaje }}</h4>
+          
+          <!-- Información adicional para sin cupos -->
+          <div *ngIf="inscripcionEstado === 'sin-cupos' && sinCuposInfo.length > 0" class="sin-cupos-modal-details">
+            <h5>Materias sin cupos:</h5>
+            <div *ngFor="let grupo of sinCuposInfo" class="sin-cupo-modal-item">
+              <strong>{{ grupo.Materium.nombre }}</strong> - Grupo: {{ grupo.sigla }}
+              <span class="cupo-disponible">Cupos disponibles: {{ grupo.cupo }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones del modal -->
+    <div class="modal-footer" *ngIf="inscripcionCompleta">
+      <button class="btn btn-primary" (click)="cerrarModal()">
+        {{ inscripcionEstado === 'exitoso' ? 'Continuar' : 'Cerrar' }}
+      </button>
+    </div>
   </div>
 </div>
