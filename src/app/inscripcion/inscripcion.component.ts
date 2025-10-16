@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InscripcionService } from './inscripcion.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { AuthService } from '../login/auth.service';
 
 @Component({
   selector: 'app-inscripcion',
@@ -11,7 +12,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   templateUrl: './inscripcion.component.html',
   styleUrls: ['./inscripcion.component.css']
 })
-export class InscripcionComponent {
+export class InscripcionComponent implements OnInit {
   registro: number | null = null;
   estudiante: any = null;
   oferta: any[] = [];
@@ -30,7 +31,52 @@ export class InscripcionComponent {
   inscripcionProgreso = 0;
   inscripcionCompleta = false;
 
-  constructor(private inscripcionService: InscripcionService) {}
+  constructor(
+    private inscripcionService: InscripcionService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    // Suscribirse a los datos del usuario autenticado
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.registro = user.registro;
+        this.estudiante = user;
+      }
+    });
+
+    // Suscribirse a la oferta del estudiante
+    this.authService.ofertaEstudiante$.subscribe(ofertaData => {
+      if (ofertaData) {
+        console.log('📚 Oferta recibida desde AuthService:', ofertaData);
+        this.procesarOferta(ofertaData);
+      }
+    });
+  }
+
+  private procesarOferta(ofertaData: any) {
+    try {
+      // Buscar la oferta en diferentes ubicaciones posibles
+      if (ofertaData.estudiante?.maestroOferta) {
+        this.oferta = ofertaData.estudiante.maestroOferta;
+      } else if (ofertaData.maestroOferta) {
+        this.oferta = ofertaData.maestroOferta;
+      } else if (ofertaData.oferta) {
+        this.oferta = ofertaData.oferta;
+      } else if (Array.isArray(ofertaData)) {
+        this.oferta = ofertaData;
+      } else {
+        console.warn('⚠️ Estructura de oferta no reconocida:', ofertaData);
+        this.oferta = [];
+      }
+
+      console.log('📋 Oferta procesada:', this.oferta);
+      this.error = '';
+    } catch (error) {
+      console.error('Error procesando oferta:', error);
+      this.error = 'Error al procesar la oferta del estudiante';
+    }
+  }
 
 async buscarEstudiante() {
   this.error = '';
@@ -140,6 +186,14 @@ async inscribirMaterias() {
         this.inscripcionMensaje = '¡Inscripción completada exitosamente! ✅';
         this.inscripcionProgreso = 100;
         this.success = 'Inscripción exitosa ✅';
+        
+        // Actualizar la oferta del estudiante para refrescar los cupos
+        try {
+          await this.authService.refreshOfertaEstudiante();
+          console.log('Oferta del estudiante actualizada después de inscripción exitosa');
+        } catch (error) {
+          console.error('Error al actualizar la oferta después de inscripción:', error);
+        }
       } else {
         // Verificar si es error por falta de cupos
         if (actualResult.grupoSinCupo && actualResult.grupoSinCupo.length > 0) {

@@ -358,9 +358,29 @@
 }
 
 .empty-message {
-  font-style: italic;
-  color: #999;
-  margin-top: 0.6rem;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1.1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Mensaje de carga */
+.loading-message {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 /* Información del estudiante */
@@ -497,6 +517,60 @@
   font-size: 0.9rem;
   color: #7f8c8d;
   font-weight: 600;
+}
+
+/* Estado actual prominente */
+.estado-actual {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.estado-titulo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  animation: estadoPulse 2s infinite;
+}
+
+@keyframes estadoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.estado-titulo.estado-iniciando,
+.estado-titulo.estado-enviando,
+.estado-titulo.estado-procesando {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.estado-titulo.estado-waiting {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.estado-titulo.estado-exitoso {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.estado-titulo.estado-error {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.estado-titulo.estado-sin-cupos {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
 }
 
 .estado-container {

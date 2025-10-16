@@ -55,9 +55,11 @@ export interface TaskResult {
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private currentUserSubject = new BehaviorSubject<Estudiante | null>(null);
+  private ofertaEstudianteSubject = new BehaviorSubject<any>(null);
 
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   public currentUser$ = this.currentUserSubject.asObservable();
+  public ofertaEstudiante$ = this.ofertaEstudianteSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -295,6 +297,11 @@ export class AuthService {
 
       if (estudiante) {
         console.log('✅ Estudiante encontrado:', estudiante);
+        
+        // Obtener automáticamente la oferta del estudiante
+        console.log('🔄 Obteniendo oferta del estudiante...');
+        await this.obtenerOfertaEstudiante(estudiante);
+        
         // Guardar información del usuario solo en el navegador
         if (isPlatformBrowser(this.platformId)) {
           localStorage.setItem('currentUser', JSON.stringify(estudiante));
@@ -312,11 +319,78 @@ export class AuthService {
     }
   }
 
+  private async obtenerOfertaEstudiante(estudiante: Estudiante): Promise<void> {
+    try {
+      console.log('🔄 Iniciando obtención de oferta para estudiante:', estudiante.registro);
+      
+      // Paso 1: Enviar tarea para obtener estudiante con oferta
+      const payload = {
+        task: 'get_estudiante_with_maestro_oferta',
+        data: {
+          registro: estudiante.registro
+        },
+        callback: API_CONFIG.CALLBACK_URL
+      };
+
+      console.log('Enviando payload para oferta:', payload);
+      
+      const taskResponse = await firstValueFrom(
+        this.http.post<TaskResponse>(`${API_CONFIG.BASE_URL}/tasks`, payload)
+      );
+      
+      console.log('Respuesta inicial de tarea oferta:', taskResponse);
+      
+      if (!taskResponse.shortId) {
+        console.error('No se recibió shortId para la tarea de oferta');
+        return;
+      }
+      
+      // Paso 2: Esperar y obtener el resultado
+      const taskResult = await this.waitForTaskResult(taskResponse.shortId);
+      
+      if (!taskResult) {
+        console.error('No se pudo obtener el resultado de la tarea de oferta');
+        return;
+      }
+      
+      // Extraer la oferta de las diferentes ubicaciones posibles
+      let ofertaData: any = null;
+      
+      if (taskResult.returnvalue) {
+        ofertaData = taskResult.returnvalue;
+      } else if (taskResult.data) {
+        ofertaData = taskResult.data;
+      } else if (taskResult.job?.returnvalue) {
+        ofertaData = taskResult.job.returnvalue;
+      } else if (taskResult.job?.data) {
+        ofertaData = taskResult.job.data;
+      }
+      
+      if (ofertaData) {
+        console.log('✅ Oferta obtenida exitosamente:', ofertaData);
+        this.ofertaEstudianteSubject.next(ofertaData);
+        
+        // Guardar en localStorage
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('ofertaEstudiante', JSON.stringify(ofertaData));
+        }
+      } else {
+        console.warn('⚠️ No se encontró oferta para el estudiante');
+      }
+      
+    } catch (error) {
+      console.error('💥 Error obteniendo oferta del estudiante:', error);
+      // No lanzamos el error para no interrumpir el login
+    }
+  }
+
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('currentUser');
+      localStorage.removeItem('ofertaEstudiante');
     }
     this.currentUserSubject.next(null);
+    this.ofertaEstudianteSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }
 
@@ -326,5 +400,43 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return this.isAuthenticatedSubject.value;
+  }
+
+  checkAutomaticLogin(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const currentUser = localStorage.getItem('currentUser');
+      const ofertaEstudiante = localStorage.getItem('ofertaEstudiante');
+      
+      if (currentUser) {
+        try {
+          const user = JSON.parse(currentUser);
+          this.currentUserSubject.next(user);
+          this.isAuthenticatedSubject.next(true);
+          console.log('✅ Usuario restaurado desde localStorage:', user);
+        } catch (error) {
+          console.error('Error parsing currentUser from localStorage:', error);
+          localStorage.removeItem('currentUser');
+        }
+      }
+      
+      if (ofertaEstudiante) {
+        try {
+          const oferta = JSON.parse(ofertaEstudiante);
+          this.ofertaEstudianteSubject.next(oferta);
+          console.log('✅ Oferta restaurada desde localStorage:', oferta);
+        } catch (error) {
+          console.error('Error parsing ofertaEstudiante from localStorage:', error);
+          localStorage.removeItem('ofertaEstudiante');
+        }
+      }
+    }
+  }
+
+  async refreshOfertaEstudiante(): Promise<void> {
+    const currentUser = this.currentUserSubject.value;
+    if (currentUser) {
+      console.log('🔄 Actualizando oferta del estudiante después de inscripción...');
+      await this.obtenerOfertaEstudiante(currentUser);
+    }
   }
 }
